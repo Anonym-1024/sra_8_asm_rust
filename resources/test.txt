@@ -1,1 +1,6 @@
-.import r r
+.import >>r r
+.export g>ahoj t>h>j
+
+.res >>>>>>j .arr #5 .arr #7 .bytes #7 { #4 "aa" {#-67 }*}
+
+label:

@@ -1,10 +1,10 @@
 use crate::sema::sema_error::SemaError;
-use crate::parser::ast::{AstNode, AstNodeKind};
+use crate::parser::cst::{CstNode, CstNodeKind};
 
 
 
-pub fn expand_labels(ast: AstNode) -> Result<(), SemaError> {
-    assert_eq!(ast.kind, AstNodeKind::File);
+pub fn expand_labels(ast: CstNode) -> Result<(), SemaError> {
+    assert_eq!(ast.kind, CstNodeKind::File);
 
 
     let mut stack: Vec<String> = Vec::new();

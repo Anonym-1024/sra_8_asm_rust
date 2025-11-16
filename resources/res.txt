@@ -1,16 +1,16 @@
-AstNode {
+CstNode {
     kind: File,
     children: [
-        AstNode {
+        CstNode {
             kind: Statements,
             children: [
-                AstNode {
+                CstNode {
                     kind: Statement,
                     children: [
-                        AstNode {
+                        CstNode {
                             kind: ImportDirective,
                             children: [
-                                AstNode {
+                                CstNode {
                                     kind: Terminal,
                                     children: [],
                                     terminal: Some(
@@ -21,15 +21,38 @@ AstNode {
                                         },
                                     ),
                                 },
-                                AstNode {
+                                CstNode {
                                     kind: LabelDefinition,
                                     children: [
-                                        AstNode {
+                                        CstNode {
                                             kind: AutoScopePrefix,
-                                            children: [],
+                                            children: [
+                                                CstNode {
+                                                    kind: Terminal,
+                                                    children: [],
+                                                    terminal: Some(
+                                                        Token {
+                                                            kind: Punctuation,
+                                                            lexeme: ">",
+                                                            line: 1,
+                                                        },
+                                                    ),
+                                                },
+                                                CstNode {
+                                                    kind: Terminal,
+                                                    children: [],
+                                                    terminal: Some(
+                                                        Token {
+                                                            kind: Punctuation,
+                                                            lexeme: ">",
+                                                            line: 1,
+                                                        },
+                                                    ),
+                                                },
+                                            ],
                                             terminal: None,
                                         },
-                                        AstNode {
+                                        CstNode {
                                             kind: Terminal,
                                             children: [],
                                             terminal: Some(
@@ -43,15 +66,15 @@ AstNode {
                                     ],
                                     terminal: None,
                                 },
-                                AstNode {
+                                CstNode {
                                     kind: LabelExternal,
                                     children: [
-                                        AstNode {
+                                        CstNode {
                                             kind: Scopes,
                                             children: [],
                                             terminal: None,
                                         },
-                                        AstNode {
+                                        CstNode {
                                             kind: Terminal,
                                             children: [],
                                             terminal: Some(
@@ -64,6 +87,565 @@ AstNode {
                                         },
                                     ],
                                     terminal: None,
+                                },
+                            ],
+                            terminal: None,
+                        },
+                    ],
+                    terminal: None,
+                },
+                CstNode {
+                    kind: Statement,
+                    children: [
+                        CstNode {
+                            kind: ExportDirective,
+                            children: [
+                                CstNode {
+                                    kind: Terminal,
+                                    children: [],
+                                    terminal: Some(
+                                        Token {
+                                            kind: Directive,
+                                            lexeme: ".export",
+                                            line: 2,
+                                        },
+                                    ),
+                                },
+                                CstNode {
+                                    kind: LabelAccess,
+                                    children: [
+                                        CstNode {
+                                            kind: AutoScopePrefix,
+                                            children: [],
+                                            terminal: None,
+                                        },
+                                        CstNode {
+                                            kind: Scopes,
+                                            children: [
+                                                CstNode {
+                                                    kind: Scope,
+                                                    children: [
+                                                        CstNode {
+                                                            kind: Terminal,
+                                                            children: [],
+                                                            terminal: Some(
+                                                                Token {
+                                                                    kind: Identifier,
+                                                                    lexeme: "g",
+                                                                    line: 2,
+                                                                },
+                                                            ),
+                                                        },
+                                                        CstNode {
+                                                            kind: Terminal,
+                                                            children: [],
+                                                            terminal: Some(
+                                                                Token {
+                                                                    kind: Punctuation,
+                                                                    lexeme: ">",
+                                                                    line: 2,
+                                                                },
+                                                            ),
+                                                        },
+                                                    ],
+                                                    terminal: None,
+                                                },
+                                            ],
+                                            terminal: None,
+                                        },
+                                        CstNode {
+                                            kind: Terminal,
+                                            children: [],
+                                            terminal: Some(
+                                                Token {
+                                                    kind: Identifier,
+                                                    lexeme: "ahoj",
+                                                    line: 2,
+                                                },
+                                            ),
+                                        },
+                                    ],
+                                    terminal: None,
+                                },
+                                CstNode {
+                                    kind: LabelExternal,
+                                    children: [
+                                        CstNode {
+                                            kind: Scopes,
+                                            children: [
+                                                CstNode {
+                                                    kind: Scope,
+                                                    children: [
+                                                        CstNode {
+                                                            kind: Terminal,
+                                                            children: [],
+                                                            terminal: Some(
+                                                                Token {
+                                                                    kind: Identifier,
+                                                                    lexeme: "t",
+                                                                    line: 2,
+                                                                },
+                                                            ),
+                                                        },
+                                                        CstNode {
+                                                            kind: Terminal,
+                                                            children: [],
+                                                            terminal: Some(
+                                                                Token {
+                                                                    kind: Punctuation,
+                                                                    lexeme: ">",
+                                                                    line: 2,
+                                                                },
+                                                            ),
+                                                        },
+                                                    ],
+                                                    terminal: None,
+                                                },
+                                                CstNode {
+                                                    kind: Scope,
+                                                    children: [
+                                                        CstNode {
+                                                            kind: Terminal,
+                                                            children: [],
+                                                            terminal: Some(
+                                                                Token {
+                                                                    kind: Identifier,
+                                                                    lexeme: "h",
+                                                                    line: 2,
+                                                                },
+                                                            ),
+                                                        },
+                                                        CstNode {
+                                                            kind: Terminal,
+                                                            children: [],
+                                                            terminal: Some(
+                                                                Token {
+                                                                    kind: Punctuation,
+                                                                    lexeme: ">",
+                                                                    line: 2,
+                                                                },
+                                                            ),
+                                                        },
+                                                    ],
+                                                    terminal: None,
+                                                },
+                                            ],
+                                            terminal: None,
+                                        },
+                                        CstNode {
+                                            kind: Terminal,
+                                            children: [],
+                                            terminal: Some(
+                                                Token {
+                                                    kind: Identifier,
+                                                    lexeme: "j",
+                                                    line: 2,
+                                                },
+                                            ),
+                                        },
+                                    ],
+                                    terminal: None,
+                                },
+                            ],
+                            terminal: None,
+                        },
+                    ],
+                    terminal: None,
+                },
+                CstNode {
+                    kind: Statement,
+                    children: [
+                        CstNode {
+                            kind: ResDirective,
+                            children: [
+                                CstNode {
+                                    kind: Terminal,
+                                    children: [],
+                                    terminal: Some(
+                                        Token {
+                                            kind: Directive,
+                                            lexeme: ".res",
+                                            line: 4,
+                                        },
+                                    ),
+                                },
+                                CstNode {
+                                    kind: LabelDefinition,
+                                    children: [
+                                        CstNode {
+                                            kind: AutoScopePrefix,
+                                            children: [
+                                                CstNode {
+                                                    kind: Terminal,
+                                                    children: [],
+                                                    terminal: Some(
+                                                        Token {
+                                                            kind: Punctuation,
+                                                            lexeme: ">",
+                                                            line: 4,
+                                                        },
+                                                    ),
+                                                },
+                                                CstNode {
+                                                    kind: Terminal,
+                                                    children: [],
+                                                    terminal: Some(
+                                                        Token {
+                                                            kind: Punctuation,
+                                                            lexeme: ">",
+                                                            line: 4,
+                                                        },
+                                                    ),
+                                                },
+                                                CstNode {
+                                                    kind: Terminal,
+                                                    children: [],
+                                                    terminal: Some(
+                                                        Token {
+                                                            kind: Punctuation,
+                                                            lexeme: ">",
+                                                            line: 4,
+                                                        },
+                                                    ),
+                                                },
+                                                CstNode {
+                                                    kind: Terminal,
+                                                    children: [],
+                                                    terminal: Some(
+                                                        Token {
+                                                            kind: Punctuation,
+                                                            lexeme: ">",
+                                                            line: 4,
+                                                        },
+                                                    ),
+                                                },
+                                                CstNode {
+                                                    kind: Terminal,
+                                                    children: [],
+                                                    terminal: Some(
+                                                        Token {
+                                                            kind: Punctuation,
+                                                            lexeme: ">",
+                                                            line: 4,
+                                                        },
+                                                    ),
+                                                },
+                                                CstNode {
+                                                    kind: Terminal,
+                                                    children: [],
+                                                    terminal: Some(
+                                                        Token {
+                                                            kind: Punctuation,
+                                                            lexeme: ">",
+                                                            line: 4,
+                                                        },
+                                                    ),
+                                                },
+                                            ],
+                                            terminal: None,
+                                        },
+                                        CstNode {
+                                            kind: Terminal,
+                                            children: [],
+                                            terminal: Some(
+                                                Token {
+                                                    kind: Identifier,
+                                                    lexeme: "j",
+                                                    line: 4,
+                                                },
+                                            ),
+                                        },
+                                    ],
+                                    terminal: None,
+                                },
+                                CstNode {
+                                    kind: TypeDirective,
+                                    children: [
+                                        CstNode {
+                                            kind: ArrDirective,
+                                            children: [
+                                                CstNode {
+                                                    kind: Terminal,
+                                                    children: [],
+                                                    terminal: Some(
+                                                        Token {
+                                                            kind: Directive,
+                                                            lexeme: ".arr",
+                                                            line: 4,
+                                                        },
+                                                    ),
+                                                },
+                                                CstNode {
+                                                    kind: Terminal,
+                                                    children: [],
+                                                    terminal: Some(
+                                                        Token {
+                                                            kind: Number,
+                                                            lexeme: "#d5",
+                                                            line: 4,
+                                                        },
+                                                    ),
+                                                },
+                                                CstNode {
+                                                    kind: TypeDirective,
+                                                    children: [
+                                                        CstNode {
+                                                            kind: ArrDirective,
+                                                            children: [
+                                                                CstNode {
+                                                                    kind: Terminal,
+                                                                    children: [],
+                                                                    terminal: Some(
+                                                                        Token {
+                                                                            kind: Directive,
+                                                                            lexeme: ".arr",
+                                                                            line: 4,
+                                                                        },
+                                                                    ),
+                                                                },
+                                                                CstNode {
+                                                                    kind: Terminal,
+                                                                    children: [],
+                                                                    terminal: Some(
+                                                                        Token {
+                                                                            kind: Number,
+                                                                            lexeme: "#d7",
+                                                                            line: 4,
+                                                                        },
+                                                                    ),
+                                                                },
+                                                                CstNode {
+                                                                    kind: TypeDirective,
+                                                                    children: [
+                                                                        CstNode {
+                                                                            kind: BytesDirective,
+                                                                            children: [
+                                                                                CstNode {
+                                                                                    kind: Terminal,
+                                                                                    children: [],
+                                                                                    terminal: Some(
+                                                                                        Token {
+                                                                                            kind: Directive,
+                                                                                            lexeme: ".bytes",
+                                                                                            line: 4,
+                                                                                        },
+                                                                                    ),
+                                                                                },
+                                                                                CstNode {
+                                                                                    kind: Terminal,
+                                                                                    children: [],
+                                                                                    terminal: Some(
+                                                                                        Token {
+                                                                                            kind: Number,
+                                                                                            lexeme: "#d7",
+                                                                                            line: 4,
+                                                                                        },
+                                                                                    ),
+                                                                                },
+                                                                            ],
+                                                                            terminal: None,
+                                                                        },
+                                                                    ],
+                                                                    terminal: None,
+                                                                },
+                                                            ],
+                                                            terminal: None,
+                                                        },
+                                                    ],
+                                                    terminal: None,
+                                                },
+                                            ],
+                                            terminal: None,
+                                        },
+                                    ],
+                                    terminal: None,
+                                },
+                                CstNode {
+                                    kind: Assignment,
+                                    children: [
+                                        CstNode {
+                                            kind: Terminal,
+                                            children: [],
+                                            terminal: Some(
+                                                Token {
+                                                    kind: Punctuation,
+                                                    lexeme: "{",
+                                                    line: 4,
+                                                },
+                                            ),
+                                        },
+                                        CstNode {
+                                            kind: AssignmentValues,
+                                            children: [
+                                                CstNode {
+                                                    kind: AssignmentValue,
+                                                    children: [
+                                                        CstNode {
+                                                            kind: Terminal,
+                                                            children: [],
+                                                            terminal: Some(
+                                                                Token {
+                                                                    kind: Number,
+                                                                    lexeme: "#d4",
+                                                                    line: 4,
+                                                                },
+                                                            ),
+                                                        },
+                                                    ],
+                                                    terminal: None,
+                                                },
+                                                CstNode {
+                                                    kind: AssignmentValue,
+                                                    children: [
+                                                        CstNode {
+                                                            kind: Terminal,
+                                                            children: [],
+                                                            terminal: Some(
+                                                                Token {
+                                                                    kind: String,
+                                                                    lexeme: "\"aa\"",
+                                                                    line: 4,
+                                                                },
+                                                            ),
+                                                        },
+                                                    ],
+                                                    terminal: None,
+                                                },
+                                                CstNode {
+                                                    kind: AssignmentValue,
+                                                    children: [
+                                                        CstNode {
+                                                            kind: Assignment,
+                                                            children: [
+                                                                CstNode {
+                                                                    kind: Terminal,
+                                                                    children: [],
+                                                                    terminal: Some(
+                                                                        Token {
+                                                                            kind: Punctuation,
+                                                                            lexeme: "{",
+                                                                            line: 4,
+                                                                        },
+                                                                    ),
+                                                                },
+                                                                CstNode {
+                                                                    kind: AssignmentValues,
+                                                                    children: [
+                                                                        CstNode {
+                                                                            kind: AssignmentValue,
+                                                                            children: [
+                                                                                CstNode {
+                                                                                    kind: Terminal,
+                                                                                    children: [],
+                                                                                    terminal: Some(
+                                                                                        Token {
+                                                                                            kind: Number,
+                                                                                            lexeme: "#d-67",
+                                                                                            line: 4,
+                                                                                        },
+                                                                                    ),
+                                                                                },
+                                                                            ],
+                                                                            terminal: None,
+                                                                        },
+                                                                    ],
+                                                                    terminal: None,
+                                                                },
+                                                                CstNode {
+                                                                    kind: Terminal,
+                                                                    children: [],
+                                                                    terminal: Some(
+                                                                        Token {
+                                                                            kind: Punctuation,
+                                                                            lexeme: "}",
+                                                                            line: 4,
+                                                                        },
+                                                                    ),
+                                                                },
+                                                                CstNode {
+                                                                    kind: AssignmentRepetition,
+                                                                    children: [
+                                                                        CstNode {
+                                                                            kind: Terminal,
+                                                                            children: [],
+                                                                            terminal: Some(
+                                                                                Token {
+                                                                                    kind: Punctuation,
+                                                                                    lexeme: "*",
+                                                                                    line: 4,
+                                                                                },
+                                                                            ),
+                                                                        },
+                                                                    ],
+                                                                    terminal: None,
+                                                                },
+                                                            ],
+                                                            terminal: None,
+                                                        },
+                                                    ],
+                                                    terminal: None,
+                                                },
+                                            ],
+                                            terminal: None,
+                                        },
+                                        CstNode {
+                                            kind: Terminal,
+                                            children: [],
+                                            terminal: Some(
+                                                Token {
+                                                    kind: Punctuation,
+                                                    lexeme: "}",
+                                                    line: 4,
+                                                },
+                                            ),
+                                        },
+                                    ],
+                                    terminal: None,
+                                },
+                            ],
+                            terminal: None,
+                        },
+                    ],
+                    terminal: None,
+                },
+                CstNode {
+                    kind: Statement,
+                    children: [
+                        CstNode {
+                            kind: LabelDirective,
+                            children: [
+                                CstNode {
+                                    kind: LabelDefinition,
+                                    children: [
+                                        CstNode {
+                                            kind: AutoScopePrefix,
+                                            children: [],
+                                            terminal: None,
+                                        },
+                                        CstNode {
+                                            kind: Terminal,
+                                            children: [],
+                                            terminal: Some(
+                                                Token {
+                                                    kind: Identifier,
+                                                    lexeme: "label",
+                                                    line: 6,
+                                                },
+                                            ),
+                                        },
+                                    ],
+                                    terminal: None,
+                                },
+                                CstNode {
+                                    kind: Terminal,
+                                    children: [],
+                                    terminal: Some(
+                                        Token {
+                                            kind: Punctuation,
+                                            lexeme: ":",
+                                            line: 6,
+                                        },
+                                    ),
                                 },
                             ],
                             terminal: None,

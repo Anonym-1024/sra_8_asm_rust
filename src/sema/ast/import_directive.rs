@@ -1,14 +1,14 @@
-use crate::{parser::ast::{AstNode, AstNodeKind}, sema::intern_rep::labels::{LabelDefinition, LabelExternal}};
+use crate::{parser::cst::{CstNode, CstNodeKind}, sema::ast::labels::{LabelDefinition, LabelExternal}};
 
 
 pub struct ImportDirective {
-    label_intern: LabelDefinition,
-    label_extern: LabelExternal
+    pub label_intern: LabelDefinition,
+    pub label_extern: LabelExternal
 }
 
 impl ImportDirective {
-    pub fn from(node: &AstNode) -> Self {
-        assert_eq!(node.kind, AstNodeKind::ExportDirective);
+    pub fn from(node: &CstNode) -> Self {
+        assert_eq!(node.kind, CstNodeKind::ImportDirective);
 
         let label_definition_node = node.child(1);
         let label_external_node = node.child(2);

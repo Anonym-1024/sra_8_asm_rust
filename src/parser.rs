@@ -1,12 +1,12 @@
 use core::panic;
 
 use crate::lexer::token::{self, Token, TokenKind};
-use ast::{AstNode, AstNodeKind};
+use cst::{CstNode, CstNodeKind};
 use parser_error::ParserError;
 use result::ParserResult;
 
 
-pub mod ast;
+pub mod cst;
 pub mod parser_error;
 pub mod result;
 
@@ -15,7 +15,7 @@ pub mod result;
 
 
 
-pub fn parse(tokens: &[Token]) -> ParserResult<AstNode, ParserError> {
+pub fn parse(tokens: &[Token]) -> ParserResult<CstNode, ParserError> {
 
     
 
@@ -72,8 +72,8 @@ fn lookahead<'a>(tokens: &'a [Token], index: usize, k: usize) -> Option<&'a Toke
 
 
 
-fn parse_file(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_file(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     let statements_node = parse_statements(tokens, index, line);
     match statements_node {
@@ -84,7 +84,7 @@ fn parse_file(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResu
 
 
     if pop_token_if_kind(tokens, index, line,  TokenKind::Eof).is_some() {
-        ParserResult::Some(AstNode::nonterminal(AstNodeKind::File, children))
+        ParserResult::Some(CstNode::nonterminal(CstNodeKind::File, children))
     } else {
 
         ParserResult::Err(ParserError::new("Expected end of file", *line))
@@ -92,8 +92,8 @@ fn parse_file(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResu
 }
 
 
-fn parse_statements(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_statements(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     loop {
         let statement_node = parse_statement(tokens, index, line);
@@ -105,12 +105,12 @@ fn parse_statements(tokens: &[Token], index: &mut usize, line: &mut i32) -> Pars
         }
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::Statements, children))
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::Statements, children))
 }
 
 
-fn parse_statement(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_statement(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     while pop_token_if_lexeme(tokens, index, line, "\n").is_some() { }
 
@@ -142,14 +142,14 @@ fn parse_statement(tokens: &[Token], index: &mut usize, line: &mut i32) -> Parse
 
 
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::Statement, children))
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::Statement, children))
 
 }
 
 
 
-fn parse_label_definition(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_label_definition(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     let mut auto_scope_prefix_count = 0;
     let auto_scope_prefix_node = parse_auto_scope_prefix(tokens, index, line);
@@ -160,7 +160,7 @@ fn parse_label_definition(tokens: &[Token], index: &mut usize, line: &mut i32) -
     }
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Identifier) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         if auto_scope_prefix_count == 0{
             return ParserResult::None;
@@ -168,23 +168,23 @@ fn parse_label_definition(tokens: &[Token], index: &mut usize, line: &mut i32) -
         return ParserResult::Err(ParserError::new("Expected identifier after auto scope prefix (>).", *line))
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::LabelDefinition, children))
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::LabelDefinition, children))
 }    
 
 
-fn parse_auto_scope_prefix(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_auto_scope_prefix(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     while let Some(token) = pop_token_if_lexeme(tokens, index, line, ">") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::AutoScopePrefix, children))
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::AutoScopePrefix, children))
 }
 
 
-fn parse_label_access(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_label_access(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     let mut auto_scope_prefix_count = 0;
     let auto_scope_prefix_node = parse_auto_scope_prefix(tokens, index, line);
@@ -204,7 +204,7 @@ fn parse_label_access(tokens: &[Token], index: &mut usize, line: &mut i32) -> Pa
 
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Identifier) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         if auto_scope_prefix_count == 0 && scopes_count == 0 {
             return ParserResult::None;
@@ -213,13 +213,13 @@ fn parse_label_access(tokens: &[Token], index: &mut usize, line: &mut i32) -> Pa
     }
 
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::LabelAccess, children))
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::LabelAccess, children))
 }
 
 
 
-fn parse_scopes(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_scopes(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
 
     loop {
@@ -231,14 +231,14 @@ fn parse_scopes(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserRe
         }
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::Scopes, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::Scopes, children)) 
 
 }
 
 
 
-fn parse_scope(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_scope(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
 
     if lookahead(tokens, *index, 1).is_some_and(|t| t.lexeme != ">") {
@@ -247,27 +247,27 @@ fn parse_scope(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserRes
 
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Identifier) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::Err(ParserError::new("Expected an identifier before >.", *line))
     }
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, ">") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::Err(ParserError::new("NEVER", *line))
     }
 
 
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::Scope, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::Scope, children)) 
 
 }
 
 
 
-fn parse_label_external(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_label_external(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
 
     let mut scopes_count = 0;
@@ -280,7 +280,7 @@ fn parse_label_external(tokens: &[Token], index: &mut usize, line: &mut i32) -> 
 
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Identifier) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         if scopes_count == 0 {
             return ParserResult::None;
@@ -289,16 +289,16 @@ fn parse_label_external(tokens: &[Token], index: &mut usize, line: &mut i32) -> 
     }
 
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::LabelExternal, children))
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::LabelExternal, children))
 }
 
 
 
-fn parse_res_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_res_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line,".res") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
@@ -324,14 +324,14 @@ fn parse_res_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> P
         ParserResult::Err(_) => { return assignment_node; },
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::ResDirective, children))
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::ResDirective, children))
 
     
 }
 
 
-fn parse_type_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_type_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     let child_node = parse_byte_directive(tokens, index, line)
         .or(|| parse_bytes_directive(tokens, index, line))
@@ -344,57 +344,57 @@ fn parse_type_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> 
         ParserResult::Err(_) => { return child_node; },
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::TypeDirective, children))
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::TypeDirective, children))
 
 }
 
 
-fn parse_byte_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_byte_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, ".byte") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::ByteDirective, children))
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::ByteDirective, children))
 }
 
 
-fn parse_bytes_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_bytes_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, ".bytes") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Number) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::Err(ParserError::new("Expected a number (element size) after a .bytes directive", *line));
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::BytesDirective, children))
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::BytesDirective, children))
 }
 
 
 
-fn parse_arr_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_arr_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, ".arr") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Number) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::Err(ParserError::new("Expected a number (array size) after an .arr directive", *line));
     }
@@ -406,17 +406,17 @@ fn parse_arr_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> P
         ParserResult::Err(_) => { return type_directive_node; },
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::ArrDirective, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::ArrDirective, children)) 
 
 }
 
 
 
-fn parse_assignment(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_assignment(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, "{") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
@@ -429,7 +429,7 @@ fn parse_assignment(tokens: &[Token], index: &mut usize, line: &mut i32) -> Pars
     }
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, "}") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::Err(ParserError::new("Assignment list must be terminated with }.", *line));
     }
@@ -443,32 +443,32 @@ fn parse_assignment(tokens: &[Token], index: &mut usize, line: &mut i32) -> Pars
     }
 
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::Assignment, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::Assignment, children)) 
 
 }
 
 
 
-fn parse_assignment_repetition(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_assignment_repetition(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, "*") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Number) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } 
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::AssignmentRepetition, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::AssignmentRepetition, children)) 
 
 }
 
 
-fn parse_assignment_values(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_assignment_values(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
 
     loop {
@@ -480,13 +480,13 @@ fn parse_assignment_values(tokens: &[Token], index: &mut usize, line: &mut i32) 
         }
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::AssignmentValues, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::AssignmentValues, children)) 
 
 }
 
 
-fn parse_assignment_value(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_assignment_value(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
 
     let assignment_node = parse_assignment(tokens, index, line);
@@ -497,49 +497,49 @@ fn parse_assignment_value(tokens: &[Token], index: &mut usize, line: &mut i32) -
     }
     
     if !children.is_empty() {
-        return ParserResult::Some(AstNode::nonterminal(AstNodeKind::AssignmentValue, children))
+        return ParserResult::Some(CstNode::nonterminal(CstNodeKind::AssignmentValue, children))
     }
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Number) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::String) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None
     }
     
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::AssignmentValue, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::AssignmentValue, children)) 
 
 
 }
 
 
-fn parse_start_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_start_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, ".start") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, ":") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::Err(ParserError::new("Expected : after a .start directive.", *line))
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::StartDirective, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::StartDirective, children)) 
 
 }
 
 
 
-fn parse_import_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_import_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, ".import") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
@@ -558,16 +558,16 @@ fn parse_import_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -
         ParserResult::Err(_) => { return label_external_node }
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::ImportDirective, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::ImportDirective, children)) 
 }
 
 
 
-fn parse_export_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_export_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, ".export") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
@@ -588,13 +588,13 @@ fn parse_export_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -
     }
 
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::ExportDirective, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::ExportDirective, children)) 
 }
 
 
 
-fn parse_label_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_label_directive(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     let label_definition_node = parse_label_definition(tokens, index, line);
     match label_definition_node {
@@ -604,12 +604,12 @@ fn parse_label_directive(tokens: &[Token], index: &mut usize, line: &mut i32) ->
     }
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, ":") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::Err(ParserError::new("Expected : after a label directive.", *line))
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::LabelDirective, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::LabelDirective, children)) 
 }
 
 
@@ -620,11 +620,11 @@ fn parse_label_directive(tokens: &[Token], index: &mut usize, line: &mut i32) ->
 
 
 
-fn parse_instruction(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_instruction(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Instruction) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
@@ -646,34 +646,34 @@ fn parse_instruction(tokens: &[Token], index: &mut usize, line: &mut i32) -> Par
     }
 
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::Instruction, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::Instruction, children)) 
 
     
 }
 
 
-fn parse_condition_code(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_condition_code(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     if let Some(token) = pop_token_if_lexeme(tokens, index, line, ":") {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::ConditionCode) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::Err(ParserError::new("Expected condition code after : in an instruction.", *line));
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::ConditionCode, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::ConditionCode, children)) 
 
 }
 
 
-fn parse_instruction_arguments(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_instruction_arguments(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
 
     loop {
@@ -685,47 +685,47 @@ fn parse_instruction_arguments(tokens: &[Token], index: &mut usize, line: &mut i
         }
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::InstructionArguments, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::InstructionArguments, children)) 
 
 }
 
 
-fn parse_instruction_argument(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_instruction_argument(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
     if !children.is_empty() {
-        return ParserResult::Some(AstNode::nonterminal(AstNodeKind::InstructionArgument, children)); 
+        return ParserResult::Some(CstNode::nonterminal(CstNodeKind::InstructionArgument, children)); 
     }
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Register) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::SystemRegister) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Port) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Number) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::String) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::LongRegister) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::InstructionArgument, children))
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::InstructionArgument, children))
 
 }
 
 
 
 
-fn parse_macro(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_macro(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Macro) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
@@ -747,13 +747,13 @@ fn parse_macro(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserRes
     }
 
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::Macro, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::Macro, children)) 
 
 }
 
 
-fn parse_macro_arguments(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_macro_arguments(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
 
 
     loop {
@@ -765,13 +765,13 @@ fn parse_macro_arguments(tokens: &[Token], index: &mut usize, line: &mut i32) ->
         }
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::MacroArguments, children)) 
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::MacroArguments, children)) 
 
 }
 
 
-fn parse_macro_argument(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<AstNode, ParserError> {
-    let mut children: Vec<AstNode> = Vec::new();
+fn parse_macro_argument(tokens: &[Token], index: &mut usize, line: &mut i32) -> ParserResult<CstNode, ParserError> {
+    let mut children: Vec<CstNode> = Vec::new();
     
 
     let label_access_node = parse_label_access(tokens, index, line);
@@ -782,20 +782,20 @@ fn parse_macro_argument(tokens: &[Token], index: &mut usize, line: &mut i32) -> 
     }
 
     if children.len() != 0 {
-        return ParserResult::Some(AstNode::nonterminal(AstNodeKind::MacroArgument, children))
+        return ParserResult::Some(CstNode::nonterminal(CstNodeKind::MacroArgument, children))
     }
 
     if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Register) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::Number) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else if let Some(token) = pop_token_if_kind(tokens, index, line, TokenKind::LongRegister) {
-        children.push(AstNode::terminal(token));
+        children.push(CstNode::terminal(token));
     } else {
         return ParserResult::None;
     }
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::MacroArgument, children))
+    ParserResult::Some(CstNode::nonterminal(CstNodeKind::MacroArgument, children))
 }
 
 

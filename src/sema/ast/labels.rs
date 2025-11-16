@@ -1,17 +1,17 @@
-use crate::parser::ast::{AstNode, AstNodeKind};
+use crate::parser::cst::{CstNode, CstNodeKind};
 
 
 
 pub struct LabelDefinition {
-    prefix_count: u32,
-    label: String,
+    pub prefix_count: u32,
+    pub label: String,
 
-    str: Option<String>
+    pub str: Option<String>
 }
 
 impl LabelDefinition {
-    pub fn from(node: &AstNode) -> Self {
-        assert_eq!(node.kind, AstNodeKind::LabelDefinition);
+    pub fn from(node: &CstNode) -> Self {
+        assert_eq!(node.kind, CstNodeKind::LabelDefinition);
 
         let auto_scope_prefix_node = node.child(0);
         let prefix_count: u32 = auto_scope_prefix_node.children.len() as u32;
@@ -24,16 +24,16 @@ impl LabelDefinition {
 }
 
 pub struct LabelAccess {
-    prefix_count: u32,
-    scopes: Vec<String>,
-    label: String,
+    pub prefix_count: u32,
+    pub scopes: Vec<String>,
+    pub label: String,
 
-    str: Option<String>
+    pub str: Option<String>
 }
 
 impl LabelAccess {
-    pub fn from(node: &AstNode) -> Self {
-        assert_eq!(node.kind, AstNodeKind::LabelAccess);
+    pub fn from(node: &CstNode) -> Self {
+        assert_eq!(node.kind, CstNodeKind::LabelAccess);
 
         let auto_scope_prefix_node = node.child(0);
         let prefix_count: u32 = auto_scope_prefix_node.children.len() as u32;
@@ -53,15 +53,15 @@ impl LabelAccess {
 }
 
 pub struct LabelExternal {
-    scopes: Vec<String>,
-    label: String,
+    pub scopes: Vec<String>,
+    pub label: String,
 
-    str: Option<String>
+    pub str: Option<String>
 }
 
 impl LabelExternal {
-    pub fn from(node: &AstNode) -> Self {
-        assert_eq!(node.kind, AstNodeKind::LabelExternal);
+    pub fn from(node: &CstNode) -> Self {
+        assert_eq!(node.kind, CstNodeKind::LabelExternal);
 
         let scopes_node = node.child(0);
 

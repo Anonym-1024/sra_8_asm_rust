@@ -2,7 +2,7 @@ use std::time::Instant;
 
 use colorize::AnsiColor;
 
-use crate::parser::result::ParserResult;
+use crate::{parser::{cst::CstNode, result::ParserResult}, sema::ast::{file::File, statement::Statement}};
 
 
 
@@ -36,7 +36,9 @@ fn main() {
 
             match &p {
                 ParserResult::Err(err) => println!("{}", err.desc().red().bold()),
-                ParserResult::Some(s) => {println!("{}\n", "*** Syntactic analysis success.".green().bold()); std::fs::write("resources/res.txt", format!("{:#?}", s).as_bytes());},
+                ParserResult::Some(s) => {println!("{}\n", "*** Syntactic analysis success.".green().bold()); std::fs::write("resources/res.txt", format!("{:#?}", s).as_bytes()); 
+            test(s);
+            },
                 ParserResult::None => {panic!("")}
             }
         }
@@ -50,3 +52,16 @@ fn main() {
 }
 
 
+fn test(s: &CstNode) {
+    let file = File::from(s);
+
+    for stmt in &file.statements {
+        match stmt {
+            Statement::ImportDirective(r) => {
+                println!("\n{:#?}\n {:#?}", r.label_intern.label, r.label_extern.scopes);
+            
+            },
+            _ => {}
+        }
+    }
+}
