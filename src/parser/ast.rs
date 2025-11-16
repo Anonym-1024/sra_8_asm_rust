@@ -24,7 +24,8 @@ pub enum AstNodeKind {
     LabelDirective,
     LabelDefinition,
     AutoScopePrefix,
-    LabelAccess, 
+    LabelAccess,
+    LabelExternal, 
     Scopes,
     Scope,
     Instruction,
@@ -64,8 +65,13 @@ impl AstNode {
         }
     }
 
-    pub fn child(&self, index: usize) -> &AstNode {
+    pub fn child<'a>(&'a self, index: usize) -> &'a AstNode {
         
         &self.children[index]
+    }
+
+    pub fn child_mut<'a>(&'a mut self, index: usize) -> &'a mut AstNode {
+        
+        &mut self.children[index]
     }
 }

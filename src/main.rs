@@ -8,7 +8,7 @@ use crate::parser::result::ParserResult;
 
 mod lexer;
 mod parser;
-use std::ops::Deref;
+mod sema;
 
 
 fn main() {

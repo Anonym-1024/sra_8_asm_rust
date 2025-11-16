@@ -289,7 +289,7 @@ fn parse_label_external(tokens: &[Token], index: &mut usize, line: &mut i32) -> 
     }
 
 
-    ParserResult::Some(AstNode::nonterminal(AstNodeKind::LabelAccess, children))
+    ParserResult::Some(AstNode::nonterminal(AstNodeKind::LabelExternal, children))
 }
 
 

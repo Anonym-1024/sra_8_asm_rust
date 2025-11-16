@@ -143,6 +143,11 @@ fn make_number_lit_token(chars: &[char], index: &mut usize, line: i32) -> Result
     lexeme.push(chars[*index]);
     *index += 1;
 
+    if chars[*index] == '-' {
+        lexeme.push(chars[*index]);
+        *index += 1;
+    }
+
     let radix_prefix: char;
 
     if is_radix_prefix(chars[*index]) {

@@ -18,6 +18,3 @@ pub fn expand_labels(ast: AstNode) -> Result<(), SemaError> {
     Ok(())
 }
 
-fn label_components(label: &str) -> Vec<String> {
-    label.split('>').map(|s| s.to_string()).collect()
-}
