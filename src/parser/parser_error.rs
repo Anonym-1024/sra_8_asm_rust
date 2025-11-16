@@ -4,7 +4,7 @@
 
 pub struct ParserError {
     desc: String,
-    line: i32,
+    line: u32,
 }
 
 
@@ -14,7 +14,7 @@ impl ParserError {
        
     }
 
-    pub fn new(desc: &str, line: i32) -> Self {
+    pub fn new(desc: &str, line: u32) -> Self {
         ParserError { desc: desc.to_string(), line }
     }
 }

@@ -12,7 +12,7 @@ pub enum LexerErrorKind {
 
 pub struct LexerError {
     kind: LexerErrorKind,
-    line: i32,
+    line: u32,
 }
 
 impl LexerError {
@@ -20,7 +20,7 @@ impl LexerError {
         format!("*** LEXER ERROR [LINE {}]: {}", &self.line, self.kind.desc())
     }
 
-    pub fn new(kind: LexerErrorKind, line: i32) -> Self {
+    pub fn new(kind: LexerErrorKind, line: u32) -> Self {
         LexerError { kind, line }
     }
 }

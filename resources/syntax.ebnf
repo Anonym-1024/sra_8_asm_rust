@@ -6,11 +6,11 @@ statement = ( import_directive | export_directive | res_directive | start_direct
 label_definition = auto_scope_prefix, ?Identifier?;
 auto_scope_prefix = { ">" };
 
-label_access = auto_scope_prefix, scopes, ?Identifier?;
+label_access = "$", auto_scope_prefix, scopes, ?Identifier?;
 scopes = { scope };
 scope = ?Identifier?, ">";
 
-label_external = scopes, ?Identifier?;
+label_external = "(", scopes, ?Identifier?, ")";
 
 import_directive = ".import", label_definition, label_external;
 
@@ -38,7 +38,7 @@ instruction_argument = ?Register? | ?SystemRegister? | ?Port? | ?Number? | ?Stri
 
 macro = ?Macro?, [ condition_code ], macro_arguments;
 macro_arguments = { macro_argument };
-macro_argument = ?Register? | ?Number? | ?LongRegister? | labe_access;
+macro_argument = ?Register? | ?Number? | ?LongRegister? | label_access;
 
 
 

@@ -2,7 +2,7 @@ use std::time::Instant;
 
 use colorize::AnsiColor;
 
-use crate::{parser::{cst::CstNode, result::ParserResult}, sema::ast::{file::File, statement::Statement}};
+use crate::{parser::{cst::CstNode, result::ParserResult}, sema::{ast::{file::File, statement::Statement}, label_expander::expand_labels}};
 
 
 
@@ -19,7 +19,7 @@ fn main() {
     
     let src = std::fs::read_to_string("resources/test.txt").expect("could not read");
     println!("{}", "*** Starting lexical analysis.".cyan());
-    let a = lexer::tokenise(src);
+    let a = lexer::Lexer::tokenise(&src);
     
     
     
@@ -32,7 +32,7 @@ fn main() {
                 //println!("{i}");
             }
             println!("{}", "*** Starting syntactic analysis.".b_cyan());
-            let p = parser::parse(x);
+            let p = parser::Parser::parse(x);
 
             match &p {
                 ParserResult::Err(err) => println!("{}", err.desc().red().bold()),
@@ -53,12 +53,34 @@ fn main() {
 
 
 fn test(s: &CstNode) {
-    let file = File::from(s);
+    let mut file = File::from(s);
+
+    match expand_labels(&mut file) {
+            Ok(_) => println!("OK"),
+            Err(e) => println!("{}", e.desc())
+        }
 
     for stmt in &file.statements {
         match stmt {
+            Statement::ExportDirective(r) => {
+                println!("\n{:#?} {:#?}\n", r.label_intern.str, r.label_extern.str);
+            
+            },
             Statement::ImportDirective(r) => {
-                println!("\n{:#?}\n {:#?}", r.label_intern.label, r.label_extern.scopes);
+                println!("\n{:#?} {:#?}\n", r.label_intern.str, r.label_extern.str);
+            
+            },
+            Statement::ResDirective(r) => {
+                println!("\n{:#?}\n", r.label.str);
+            
+            },
+
+            Statement::LabelDirective(r) => {
+                println!("\n{:#?}\n", r.label.str);
+            
+            },
+            Statement::Macro(r) => {
+                println!("\n{:#?}\n", r.args[0]);
             
             },
             _ => {}

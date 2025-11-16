@@ -2,7 +2,7 @@
 
 pub struct SemaError {
     desc: String,
-    line: i32,
+    line: u32,
 }
 
 
@@ -12,7 +12,7 @@ impl SemaError {
        
     }
 
-    pub fn new(desc: &str, line: i32) -> Self {
+    pub fn new(desc: &str, line: u32) -> Self {
         SemaError { desc: desc.to_string(), line }
     }
 }

@@ -19,8 +19,8 @@ impl Statement {
             CstNodeKind::ExportDirective => Statement::ExportDirective(ExportDirective::from(node.child(0))),
             CstNodeKind::ResDirective => Statement::ResDirective(ResDirective::from(node.child(0))),
             CstNodeKind::LabelDirective => Statement::LabelDirective(LabelDirective::from(node.child(0))),
-            CstNodeKind::Instruction => unreachable!()/*Statement::Instruction(Instruction::from(node.child(0)))*/,
-            CstNodeKind::Macro => unreachable!()/*Statement::Macro(Macro::from(node.child(0)))*/,
+            CstNodeKind::Instruction => Statement::Instruction(Instruction::from(node.child(0))),
+            CstNodeKind::Macro => Statement::Macro(Macro::from(node.child(0))),
             _ => unreachable!()
         }
         

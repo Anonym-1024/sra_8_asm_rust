@@ -23,15 +23,15 @@ pub enum TokenKind {
 pub struct Token {
     pub kind: TokenKind,
     pub lexeme: String,
-    pub line: i32,
+    pub line: u32,
 }
 
 impl Token {
-    pub fn new(kind: TokenKind, lexeme: String, line: i32) -> Self {
+    pub fn new(kind: TokenKind, lexeme: String, line: u32) -> Self {
         Self  {kind: kind, lexeme: lexeme, line: line}
     }
 
-    pub fn eof_token(line: i32) -> Self {
+    pub fn eof_token(line: u32) -> Self {
         Self { kind: TokenKind::Eof, lexeme: String::new(), line }
     }
 }

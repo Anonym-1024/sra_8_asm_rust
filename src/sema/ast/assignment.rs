@@ -21,7 +21,7 @@ impl Assignment {
         let values = make_values(assignment_values_node);
 
         if node.children.len() == 3 {
-            return Assignment { values, repetition: 1 };
+            return Self { values, repetition: 1 };
         }
 
         let repetition_node = node.child(3);

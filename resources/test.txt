@@ -1,6 +1,15 @@
-.import >>r r
-.export g>ahoj t>h>j
+.import r (r)
+.export $ahoj (t>h>j)
 
-.res >>>>>>j .arr #5 .arr #7 .bytes #7 { #4 "aa" {#-67 }*}
+.res j .arr #5 .arr #7 .bytes #7 { #4 "aa" {#-67 }*}
 
-label:
+main:
+>label:
+    mov r4 r6
+    add:ne r1 r3 #67
+    .res >>a .byte
+    .res >>b .byte
+>>loop:
+>>label1:
+    .export $>label1 (a)
+    !b $>>>>loop

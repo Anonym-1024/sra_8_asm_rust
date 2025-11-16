@@ -14,6 +14,9 @@ pub mod data_type;
 pub mod assignment;
 pub mod labels;
 pub mod helpers;
+pub mod macro_arg;
+pub mod instruction_arg;
+
 
 
 
